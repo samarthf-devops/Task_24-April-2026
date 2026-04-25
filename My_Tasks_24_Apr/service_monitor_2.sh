@@ -1,3 +1,16 @@
+# Task 2: Bash Script – Service Monitor
+# Write a script: check_service.sh &lt;service_name&gt;
+# Requirements:
+# - Check if service is running
+# - If NOT:
+# - restart it
+# - log action in /tmp/service_monitor.log
+# - Print timestamp and status (RUNNING / RESTARTED / FAILED)
+# Bonus:
+# - Add retry (3 attempts)
+# - Use proper exit codes
+#...............................................................................................
+
 #!/bin/bash
 
 SERVICE="${1:-nginx}"  
