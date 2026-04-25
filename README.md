@@ -56,7 +56,7 @@ bash service_monitor_2.sh nginx
 
 **Sample log output:**
 ```
-![Task 2 Output](screenshot_task2.png)
+![Task 2 Output](My_Tasks_24_Apr/screenshot_task2.png)
 ```
 
 ---
