@@ -1,6 +1,3 @@
-# Test Image
-
-![Test](https://via.placeholder.com/150)
 
 # Linux Administration & Shell Scripting Tasks
 
@@ -59,7 +56,7 @@ bash service_monitor_2.sh nginx
 
 **Sample log output:**
 ```
-![Screenshot](https://github.com/user-attachments/assets/218b3e20-4a17-473b-a776-0c3a3c38663f)
+<img width="651" height="171" alt="image" src="https://github.com/user-attachments/assets/d8870cce-f294-48b5-a9ce-90cb075485ad" />
 
 ```
 
