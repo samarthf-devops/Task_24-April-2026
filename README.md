@@ -7,11 +7,10 @@ A collection of Linux system administration scripts covering process monitoring,
 ## Repository Structure
 
 ```
-├── linux_task_1.sh                # Top memory processes & log file utilities
+├── linux_task_1.sh                # Task 1 – Top memory processes & log file utilities
 ├── service_monitor_2.sh           # Task 2 – Service monitor with auto-restart
 ├── log_analyzer_script_3.sh       # Task 3 – Log file analyzer
 ├── disk_monitor_4.py              # Task 4 – Disk usage monitor (Python)
-├── log_cleanup_automation_5.sh    # Task 5 – Log rotation config
 ├── ip_validate_6.sh               # Task 6 – IPv4 address validator
 └── README.md
 ```
@@ -21,6 +20,7 @@ A collection of Linux system administration scripts covering process monitoring,
 ## Task Overview
 
 ### Task 1 – System Monitoring Commands
+
 A set of one-liner shell commands to quickly inspect system health:
 - View the top 5 memory-consuming processes
 - Find files larger than 100MB inside `/var/log`
@@ -30,20 +30,22 @@ A set of one-liner shell commands to quickly inspect system health:
 
 **How to run:**
 ```bash
-bash linux_task_1.sh  
+bash linux_task_1.sh
 ```
 
 ---
 
-### Task 2 – Service Monitor (`service_monitor2.sh`)
+### Task 2 – Service Monitor (`service_monitor_2.sh`)
+
 Checks if a given system service is running. If it is not, the script will automatically attempt to restart it up to 3 times, logging every action with a timestamp.
 
 **How to run:**
 ```bash
-bash service_monitor2.sh
+bash service_monitor_2.sh nginx
 ```
 
 **Exit codes:**
+
 | Code | Meaning |
 |------|---------|
 | `0` | Service is running or was successfully restarted |
@@ -53,142 +55,170 @@ bash service_monitor2.sh
 
 **Sample log output:**
 ```
-<img width="483" height="131" alt="image" src="https://github.com/user-attachments/assets/94822fb4-2d31-4859-af8c-4e3e980bc364" />
+![Screenshot](https://github.com/user-attachments/assets/218b3e20-4a17-473b-a776-0c3a3c38663f)
 
 ```
 
 ---
 
-### Task 3 – Log Analyzer (`log_analyzer_script_3.sh` )
+### Task 3 – Log Analyzer (`log_analyzer_script_3.sh`)
+
 Parses a log file and counts the total number of `ERROR` and `INFO` entries. Also shows the top 3 most frequently occurring error messages.
 
 **How to run:**
 ```bash
-bash log_analyzer_script_3.sh  /var/log/syslog
+bash log_analyzer_script_3.sh /var/log/syslog
 ```
 
 **Sample output:**
 ```
-<img width="1285" height="225" alt="image" src="https://github.com/user-attachments/assets/138fccd4-1397-4271-908c-9d8c904b1e22" />
+ERROR: 42
+INFO: 158
 
+Top 3 frequent ERROR messages:
+  12 Connection refused
+   8 Timeout exceeded
+   5 Disk read error
 ```
 
 ---
 
 ### Task 4 – Disk Usage Monitor (`disk_monitor_4.py`)
+
 A Python script that checks the current disk usage of the root partition (`/`). If usage exceeds 80%, it prints a warning to the terminal and appends the alert to `disk_alerts.log`.
 
 **Requirements:** Python 3
 
 **How to run:**
 ```bash
-python3 disk_monitor_4.py  
+python3 disk_monitor_4.py
 ```
 
 **Sample output:**
 ```
-<img width="616" height="69" alt="image" src="https://github.com/user-attachments/assets/fe001c33-8e47-4ba7-8a88-296029ac9599" />
-
+Disk Usage: 85 %
+WARNING: Disk usage is high!
 ```
 
 **Alert log file:** `disk_alerts.log` (created in the same directory)
 
 ---
 
-### Task 5 – Log Rotation (`og_cleanup_automation_5.sh `)
+### Task 5 – Log Rotation (logrotate)
 
-A `logrotate` configuration file that automatically manages log files in `/var/log/myapp/`:
+A `logrotate` configuration that automatically manages log files in `/var/log/myapp/`.
 
-- Rotates logs **daily**
-- Keeps the last **7 rotations**
-- **Compresses** old logs (with a one-day delay to avoid compressing the most recent)
-- Adds a **date stamp** to rotated file names
+**What it does:**
+- Rotates logs daily
+- Keeps the last 7 rotations
+- Compresses old logs (with a one-day delay)
+- Adds a date stamp to rotated file names
 - Skips rotation if the log file is empty
 
 ---
 
-#### How to Apply (Manual)
+#### Step 1 – Create the log folder
 
 ```bash
-# Test the config first (dry run – nothing gets changed)
-sudo logrotate --debug /path/to/logrotate_myapp.conf
-
-# Force run it manually
-sudo logrotate -f /path/to/logrotate_myapp.conf
+sudo mkdir -p /var/log/myapp
+sudo touch /var/log/myapp/app.log
 ```
+
+#### Step 2 – Add some data to the log (required, empty files are skipped)
+
+```bash
+echo "ERROR something failed" | sudo tee -a /var/log/myapp/app.log
+echo "INFO app started" | sudo tee -a /var/log/myapp/app.log
+```
+
+#### Step 3 – Create the logrotate config
+
+```bash
+sudo nano /etc/logrotate.d/myapp
+```
+
+Paste the following and save:
+
+```
+/var/log/myapp/*.log {
+    daily
+    rotate 7
+    compress
+    delaycompress
+    missingok
+    notifempty
+    create 0640 root root
+    dateext
+}
+```
+
+#### Step 4 – Test (force run)
+
+```bash
+sudo logrotate -f /etc/logrotate.d/myapp
+```
+
+#### Step 5 – Check the result
+
+```bash
+ls -l /var/log/myapp
+```
+
+i saw the original log and a rotated copy:
+
+```
+app.log
+app.log-20260425
+```
+
+#### Step 6 – Check compression
+
+Run logrotate again, then list the files:
+
+```bash
+sudo logrotate -f /etc/logrotate.d/myapp
+ls -l /var/log/myapp
+```
+
+The previous rotated log will now be compressed:
+
+```
+app.log-2026-04-25.gz
+```
+
+#### Step 7 – Verify old log deletion
+
+Run logrotate multiple times to simulate multiple days:
+
+```bash
+for i in {1..10}; do sudo logrotate -f /etc/logrotate.d/myapp; done
+ls /var/log/myapp
+```
+
+Only the last 7 logs are kept. Anything older is deleted automatically.
+
+#### Step 8 – Verify automation (systemd timer)
+
+```bash
+systemctl list-timers | grep logrotate
+```
+
+If `logrotate.timer` appears in the output, logrotate is already scheduled to run daily automatically. No manual timer setup is needed.
+
+**Summary:**
+
+| Feature | Meaning |
+|---------|---------|
+| `/var/log/myapp` | Where logs are stored |
+| `rotate 7` | Keep last 7 logs |
+| `compress` | Compress old logs |
+| `delaycompress` | Compress from the next cycle (not the latest) |
+| `logrotate.timer` | Runs automatically every day via systemd |
 
 ---
 
-#### Automate with systemd Timer
+### Task 6 – IPv4 Address Validator (`ip_validate_6.sh`)
 
- use a **systemd timer** to run logrotate automatically every day.
-
-**Step 1 – Copy the config to logrotate.d**
-
-```bash
-sudo cp logrotate_myapp.conf /etc/logrotate.d/myapp
-```
-
-**Step 2 – Create the service unit**
-
-Create file: `/etc/systemd/system/logrotate-myapp.service`
-
-```ini
-[Unit]
-Description=Rotate myapp logs using logrotate
-
-[Service]
-Type=oneshot
-ExecStart=/usr/sbin/logrotate /etc/logrotate.d/myapp
-```
-
-**Step 3 – Create the timer unit**
-
-Create file: `/etc/systemd/system/logrotate-myapp.timer`
-
-```ini
-[Unit]
-Description=Run myapp logrotate daily
-
-[Timer]
-OnCalendar=daily
-Persistent=true
-
-[Install]
-WantedBy=timers.target
-```
-
-> `Persistent=true` — if the system was off at the scheduled time, the timer will run immediately on next boot.
-
-**Step 4 – Enable and start the timer**
-
-```bash
-sudo systemctl daemon-reload
-sudo systemctl enable logrotate-myapp.timer
-sudo systemctl start logrotate-myapp.timer
-```
-
-**Step 5 – Verify the timer is active**
-
-```bash
-systemctl list-timers --all | grep logrotate-myapp
-```
-
-output like:
-```
-NEXT                        LEFT     LAST                        PASSED  UNIT                        ACTIVATES
-Sat 2026-04-26 00:00:00 IST 10h left Fri 2026-04-25 00:00:01 IST 13h ago logrotate-myapp.timer       logrotate-myapp.service
-```
-
-**Step 6 – Check logs to confirm it ran**
-
-```bash
-sudo journalctl -u logrotate-myapp.service
-```
-
----
-
-### Task 6 – IPv4 Address Validator (`validate_ip.sh`)
 An interactive script that prompts the user to enter an IPv4 address and validates it in a loop until the user quits.
 
 **Validation rules:**
@@ -197,7 +227,7 @@ An interactive script that prompts the user to enter an IPv4 address and validat
 
 **How to run:**
 ```bash
-bash validate_ip.sh
+bash ip_validate_6.sh
 ```
 
 **Sample interaction:**
@@ -212,4 +242,3 @@ Press Enter to continue or 'q' to quit: q
 ```
 
 ---
-
