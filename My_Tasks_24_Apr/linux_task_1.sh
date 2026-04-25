@@ -2,7 +2,7 @@
 ps aux --sort=-%mem | head -n 6 
 
 # 2) Find files >100MB in /var/log
-find /var/log -type f -size +100
+find /var/log -type f -size +100M
 
 # 3) Count number of .log files recursively
 find / -type f -name "*.log" 2>/dev/null | wc -l
