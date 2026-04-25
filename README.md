@@ -56,8 +56,7 @@ bash service_monitor_2.sh nginx
 
 **Sample log output:**
 ```
-<img width="651" height="171" alt="image" src="https://github.com/user-attachments/assets/d8870cce-f294-48b5-a9ce-90cb075485ad" />
-
+![Task 2 Output](screenshot_task2.png)
 ```
 
 ---
