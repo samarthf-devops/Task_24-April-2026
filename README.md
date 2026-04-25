@@ -57,6 +57,17 @@ bash service_monitor_2.sh nginx
 **Sample log output:**
 ```
 ![Task 2 Output](My_Tasks_24_Apr/Screenshot from 2026-04-25 13-38-37.png)
+
+samarthf@samarth:~/Tasks/My_Tasks_24_Apr$ bash service_monitor2.sh 
+2026-04-25 13:31:06 - nginx - Attempt 1 to restart
+Failed to restart nginx.service: Unit nginx.service not found.
+2026-04-25 13:31:10 - nginx - Attempt 2 to restart
+Failed to restart nginx.service: Unit nginx.service not found.
+2026-04-25 13:31:14 - nginx - Attempt 3 to restart
+Failed to restart nginx.service: Unit nginx.service not found.
+2026-04-25 13:31:18 - nginx - FAILED after 3 attempts
+samarthf@samarth:~/Tasks/My_Tasks_24_Apr$ 
+
 ```
 
 ---
@@ -96,8 +107,8 @@ python3 disk_monitor_4.py
 
 **Sample output:**
 ```
-Disk Usage: 85 %
-WARNING: Disk usage is high!
+Disk Usage: 3 %
+
 ```
 
 **Alert log file:** `disk_alerts.log` (created in the same directory)
@@ -207,13 +218,13 @@ If `logrotate.timer` appears in the output, logrotate is already scheduled to ru
 
 **Summary:**
 
-| Feature | Meaning |
-|---------|---------|
-| `/var/log/myapp` | Where logs are stored |
-| `rotate 7` | Keep last 7 logs |
-| `compress` | Compress old logs |
-| `delaycompress` | Compress from the next cycle (not the latest) |
-| `logrotate.timer` | Runs automatically every day via systemd |
+| Feature           |  Meaning                                      |
+|----------------   |-----------------------------------------------|
+| `/var/log/myapp`  | Where logs are stored                         |
+| `rotate 7`        | Keep last 7 logs                              |                      
+| `compress`        | Compress old logs                             |
+| `delaycompress`   | Compress from the next cycle (not the latest) |
+| `logrotate.timer` | Runs automatically every day via systemd      |   
 
 ---
 
