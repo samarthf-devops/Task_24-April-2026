@@ -1,3 +1,14 @@
+# Create a shell script that validates an IPv4 address entered by the user.
+
+# The script should prompt the user to enter an IP address.
+# It should check that the IP has exactly four octets separated by dots.
+# Each octet must be a number between 0 and 255.
+# If the IP is valid, display "IP is valid", otherwise display "IP is not valid".
+# After each validation, prompt the user to either continue or type 'q' to quit.
+# Keep looping until the user chooses to quit.
+# ..............................................................................................................
+
+
 #!/bin/bash
 
 while true
