@@ -1,0 +1,11 @@
+
+/var/log/myapp/*.log {
+    daily
+    rotate 7               
+    compress               
+    delaycompress          
+    missingok              
+    notifempty             
+    create 0640 root root  
+    dateext                
+}
