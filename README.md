@@ -1,3 +1,7 @@
+# Test Image
+
+![Test](https://via.placeholder.com/150)
+
 # Linux Administration & Shell Scripting Tasks
 
 A collection of Linux system administration scripts covering process monitoring, service management, log analysis, disk usage, log cleanup, and input validation.
