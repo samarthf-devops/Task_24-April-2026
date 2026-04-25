@@ -1,3 +1,15 @@
+# Task 3: Log Analyzer Script
+# Given a log file, count:
+# - ERROR
+# - INFO
+# Output format:
+# ERROR: &lt;count&gt;
+# INFO: &lt;count&gt;
+# Bonus:
+# - Show top 3 frequent error messages
+# .............................................................................................................
+
+
 #!/bin/bash
 
 if [ $# -ne 1 ]; then
