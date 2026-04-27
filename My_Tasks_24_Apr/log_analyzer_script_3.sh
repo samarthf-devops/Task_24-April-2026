@@ -3,8 +3,8 @@
 # - ERROR
 # - INFO
 # Output format:
-# ERROR: &lt;count&gt;
-# INFO: &lt;count&gt;
+# ERROR: count
+# INFO: count
 # Bonus:
 # - Show top 3 frequent error messages
 # .............................................................................................................
@@ -33,10 +33,5 @@ echo "INFO: $INFO_COUNT"
 echo ""
 echo "Top 3 frequent ERROR messages:"
 
-grep "ERROR" "$LOG_FILE" \
-    | sed 's/^.*ERROR[: ]*//' \
-    | sort \
-    | uniq -c \
-    | sort -nr \
-    | head -3
+grep "ERROR" "$LOG_FILE" | sed 's/^.*ERROR[: ]*//' | sort | uniq -c | sort -nr | head -3
     
