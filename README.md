@@ -148,8 +148,6 @@ echo "INFO app started" | sudo tee -a /var/log/myapp/app.log
 sudo nano /etc/logrotate.d/myapp
 ```
 
-Paste the following and save:
-
 ```
 /var/log/myapp/*.log {
     daily
